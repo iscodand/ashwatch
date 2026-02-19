@@ -1,41 +1,35 @@
+using AshWatch.Application.Contracts;
+using AshWatch.Application.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+builder.Services.AddScoped<ILogService, LogService>();
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddOpenApiDocument(config =>
+{
+    config.DocumentName = "TodoAPI";
+    config.Title = "TodoAPI v1";
+    config.Version = "v1";
+});
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+app.UseOpenApi();
+app.UseSwaggerUi(config =>
 {
-    app.MapOpenApi();
-}
+    config.DocumentTitle = "AshWatch API Documentation";
+    config.Path = "/swagger";
+    config.DocumentPath = "/swagger/{documentName}/swagger.json";
+    config.DocExpansion = "list";
+});
 
-app.UseHttpsRedirection();
+app.MapPost("/logs", (string message) => $"Echo: {message}");
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+app.MapPost("logs/batch", (List<string> messages) => $"Received {messages.Count} messages.");
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+app.MapGet("/logs/{id}", (int id) => $"Log ID: {id}");
+
+app.MapGet("logs/", () => "Fetching all logs...");
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
