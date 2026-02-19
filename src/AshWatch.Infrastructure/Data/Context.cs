@@ -13,15 +13,18 @@ public class DataContext
         var connectionString = configuration.GetConnectionString("MongoDb");
         var mongoClient = new MongoClient(connectionString);
 
-        _database = mongoClient.GetDatabase("ashwatch_db");
+        _database = mongoClient.GetDatabase("ash_logging_dev");
     }
 
-    public IMongoCollection<Log> Logs =>
-        _database.GetCollection<Log>("logs");
+    public IMongoCollection<Log> Logs => GetCollection<Log>();
 
-    public IMongoCollection<Tenant> Tenants =>
-        _database.GetCollection<Tenant>("tenants");
+    public IMongoCollection<Tenant> Tenants => GetCollection<Tenant>();
 
-    public IMongoCollection<Project> Projects =>
-        _database.GetCollection<Project>("projects");
+    public IMongoCollection<Project> Projects => GetCollection<Project>();
+
+    public IMongoCollection<T> GetCollection<T>() where T : class
+    {
+        var collectionName = $"{typeof(T).Name.ToLowerInvariant()}s";
+        return _database.GetCollection<T>(collectionName);
+    }
 }
