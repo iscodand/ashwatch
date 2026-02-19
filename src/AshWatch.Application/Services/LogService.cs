@@ -1,10 +1,17 @@
 using AshWatch.Application.Contracts;
+using AshWatch.Domain.Repositories;
 
 namespace AshWatch.Application.Services;
 
 public class LogService : ILogService
 {
     private readonly List<string> _logs = [];
+    private readonly ILogRepository _logRepository;
+
+    public LogService(ILogRepository logRepository)
+    {
+        _logRepository = logRepository;
+    }
 
     public void Log(string message)
     {
