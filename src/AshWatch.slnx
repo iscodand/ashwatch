@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="AshWatch.Api/AshWatch.Api.csproj" />
+  <Project Path="AshWatch.Application/AshWatch.Application.csproj" />
+  <Project Path="AshWatch.Domain/AshWatch.Domain.csproj" />
+  <Project Path="AshWatch.Infrastructure/AshWatch.Infrastructure.csproj" />
+</Solution>
