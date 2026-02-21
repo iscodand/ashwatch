@@ -36,21 +36,8 @@ public class LogsController : ApiResponseControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll(
-        [FromQuery] int tenantId,
-        [FromQuery] int projectId,
-        [FromQuery] DateTime? startDate,
-        [FromQuery] DateTime? endDate
-    )
+    public async Task<IActionResult> GetAll([FromQuery] GetLogsFilterRequest request)
     {
-        var request = new GetLogsFilterRequest
-        {
-            TenantId = tenantId,
-            ProjectId = projectId,
-            StartDate = startDate,
-            EndDate = endDate
-        };
-
         var response = await _logService.GetAllLogsAsync(request);
         return FromService(response);
     }
