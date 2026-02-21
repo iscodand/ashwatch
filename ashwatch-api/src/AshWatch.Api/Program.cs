@@ -1,17 +1,26 @@
 using AshWatch.Application.Contracts;
-using AshWatch.Application.Dtos;
 using AshWatch.Application.Services;
 using AshWatch.Domain.Repositories;
 using AshWatch.Infrastructure.Data;
 using AshWatch.Infrastructure.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<ILogService, LogService>();
+builder.Services.AddScoped<ITenantService, TenantService>();
+builder.Services.AddScoped<IProjectService, ProjectService>();
 builder.Services.AddScoped<ILogRepository, LogRepository>();
+builder.Services.AddScoped<ITenantRepository, PostgresTenantRepository>();
+builder.Services.AddScoped<IProjectRepository, PostgresProjectRepository>();
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(PostgresGenericRepository<>));
 
 builder.Services.AddSingleton<DataContext>();
+builder.Services.AddDbContext<PostgresDataContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresDb"))
+);
 
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApiDocument(config =>
 {
@@ -31,32 +40,6 @@ app.UseSwaggerUi(config =>
     config.DocExpansion = "list";
 });
 
-app.MapPost("/logs", (CreateLogRequest request, ILogService logService) =>
-{
-    return logService.LogAsync(request);
-});
-
-app.MapPost("/logs/batch", (List<CreateLogRequest> requests, ILogService logService) =>
-{
-    return logService.LogBatchAsync(requests);
-});
-
-app.MapGet(
-    "/logs/{id}",
-    (int id, int tenantId, int projectId, ILogService logService) => logService.GetLogByIdAsync(id, tenantId, projectId)
-);
-
-app.MapGet("/logs/", (int tenantId, int projectId, DateTime? startDate, DateTime? endDate, ILogService logService) =>
-{
-    var request = new GetLogsFilterRequest
-    {
-        TenantId = tenantId,
-        ProjectId = projectId,
-        StartDate = startDate,
-        EndDate = endDate
-    };
-
-    return logService.GetAllLogsAsync(request);
-});
+app.MapControllers();
 
 app.Run();
