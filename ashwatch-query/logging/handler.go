@@ -1,37 +1,65 @@
 package logging
 
 import (
-	"ashwatchquery/db"
-	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
-
-	"go.mongodb.org/mongo-driver/bson"
+	"time"
 )
 
-func GetFilteredLogs(w http.ResponseWriter, r *http.Request) {
-	client, err := db.Connect()
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-	}
-	defer client.Disconnect(context.Background())
+type LogHandler struct {
+	repo LogRepository
+}
 
-	var logs []Log
-	collection := client.Database("ash_logging_dev").Collection("logs")
-	cursor, err := collection.Find(context.Background(), bson.D{})
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-	}
-	defer cursor.Close(context.Background())
+func NewLogHandler(repo LogRepository) *LogHandler {
+	return &LogHandler{repo: repo}
+}
 
-	for cursor.Next(context.Background()) {
-		var log Log
-		if err := cursor.Decode(&log); err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+func (h *LogHandler) GetFilteredLogs(w http.ResponseWriter, r *http.Request) {
+	if h == nil {
+		panic("handler nil")
+	}
+	if h.repo == nil {
+		panic("repo nil")
+	}
+
+	ctx := r.Context()
+
+	startDateStr := r.URL.Query().Get("startDate")
+	endDateStr := r.URL.Query().Get("endDate")
+
+	var startDate time.Time
+	var endDate time.Time
+	var err error
+
+	if startDateStr != "" {
+		startDate, err = time.Parse(time.RFC3339, startDateStr)
+		if err != nil {
+			http.Error(w, "startDate inválida"+err.Error(), http.StatusBadRequest)
 		}
-
-		logs = append(logs, log)
 	}
 
-	json.NewEncoder(w).Encode(logs)
+	if endDateStr != "" {
+		endDate, err = time.Parse(time.RFC3339, endDateStr)
+		if err != nil {
+			http.Error(w, "endDate inválida"+err.Error(), http.StatusBadRequest)
+			return
+		}
+	}
+
+	filter := GetLogFilter{
+		StartDate: startDate,
+		EndDate:   endDate,
+	}
+
+	logs, err := h.repo.GetWithFilters(ctx, filter)
+	if err != nil {
+		http.Error(w, "erro ao buscar logs", http.StatusInternalServerError)
+		return
+	}
+
+	fmt.Print(logs)
+
+	w.Header().Set("Content-Type", "application/json")
+	_ = json.NewEncoder(w).Encode(logs)
 }
