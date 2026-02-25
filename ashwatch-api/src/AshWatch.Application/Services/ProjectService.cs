@@ -18,6 +18,16 @@ public class ProjectService : IProjectService
     public async Task<DefaultResponse<Project>> CreateAsync(CreateProjectRequest request)
     {
         var errors = RequestValidator.Validate(request);
+        if (request.TenantId == Guid.Empty)
+        {
+            errors.Add("TenantId must be a valid GUID.");
+        }
+
+        if (request.AuthorId == Guid.Empty)
+        {
+            errors.Add("AuthorId must be a valid GUID.");
+        }
+
         if (errors.Count > 0)
         {
             return DefaultResponse<Project>.Fail("Validation failed.", errors.ToArray());
@@ -39,12 +49,9 @@ public class ProjectService : IProjectService
             );
         }
 
-        var currentProjects = await _projectRepository.GetAllAsync();
-        var nextId = currentProjects.Any() ? currentProjects.Max(x => x.Id) + 1 : 1;
-
         var project = new Project
         {
-            Id = nextId,
+            Id = Guid.NewGuid(),
             TenantId = request.TenantId,
             AuthorId = request.AuthorId,
             Name = normalizedName,
@@ -56,13 +63,13 @@ public class ProjectService : IProjectService
         return DefaultResponse<Project>.Ok(project, "Project created successfully.");
     }
 
-    public async Task<DefaultResponse<List<Project>>> GetAllAsync(int? tenantId)
+    public async Task<DefaultResponse<List<Project>>> GetAllAsync(Guid? tenantId)
     {
         if (tenantId.HasValue)
         {
-            if (tenantId.Value <= 0)
+            if (tenantId.Value == Guid.Empty)
             {
-                return DefaultResponse<List<Project>>.Fail("Validation failed.", "TenantId must be greater than zero.");
+                return DefaultResponse<List<Project>>.Fail("Validation failed.", "TenantId must be a valid GUID.");
             }
 
             var tenantExists = await _projectRepository.TenantExistsAsync(tenantId.Value);
@@ -79,11 +86,11 @@ public class ProjectService : IProjectService
         return DefaultResponse<List<Project>>.Ok(projects.OrderBy(x => x.Name).ToList());
     }
 
-    public async Task<DefaultResponse<Project>> GetByIdAsync(int id, int tenantId)
+    public async Task<DefaultResponse<Project>> GetByIdAsync(Guid id, Guid tenantId)
     {
-        if (id <= 0 || tenantId <= 0)
+        if (id == Guid.Empty || tenantId == Guid.Empty)
         {
-            return DefaultResponse<Project>.Fail("Validation failed.", "Id and tenantId must be greater than zero.");
+            return DefaultResponse<Project>.Fail("Validation failed.", "Id and tenantId must be valid GUIDs.");
         }
 
         var project = await _projectRepository.GetByIdAsync(id, tenantId);
@@ -95,14 +102,24 @@ public class ProjectService : IProjectService
         return DefaultResponse<Project>.Ok(project);
     }
 
-    public async Task<DefaultResponse<Project>> UpdateAsync(int id, UpdateProjectRequest request)
+    public async Task<DefaultResponse<Project>> UpdateAsync(Guid id, UpdateProjectRequest request)
     {
-        if (id <= 0)
+        if (id == Guid.Empty)
         {
-            return DefaultResponse<Project>.Fail("Validation failed.", "Id must be greater than zero.");
+            return DefaultResponse<Project>.Fail("Validation failed.", "Id must be a valid GUID.");
         }
 
         var errors = RequestValidator.Validate(request);
+        if (request.TenantId == Guid.Empty)
+        {
+            errors.Add("TenantId must be a valid GUID.");
+        }
+
+        if (request.AuthorId == Guid.Empty)
+        {
+            errors.Add("AuthorId must be a valid GUID.");
+        }
+
         if (errors.Count > 0)
         {
             return DefaultResponse<Project>.Fail("Validation failed.", errors.ToArray());
@@ -143,11 +160,11 @@ public class ProjectService : IProjectService
         return DefaultResponse<Project>.Ok(currentProject, "Project updated successfully.");
     }
 
-    public async Task<DefaultResponse<bool>> DeleteAsync(int id, int tenantId)
+    public async Task<DefaultResponse<bool>> DeleteAsync(Guid id, Guid tenantId)
     {
-        if (id <= 0 || tenantId <= 0)
+        if (id == Guid.Empty || tenantId == Guid.Empty)
         {
-            return DefaultResponse<bool>.Fail("Validation failed.", "Id and tenantId must be greater than zero.");
+            return DefaultResponse<bool>.Fail("Validation failed.", "Id and tenantId must be valid GUIDs.");
         }
 
         var project = await _projectRepository.GetByIdAsync(id, tenantId);

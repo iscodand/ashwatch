@@ -22,28 +22,28 @@ public class ProjectsController : BaseController
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll([FromQuery] int? tenantId)
+    public async Task<IActionResult> GetAll([FromQuery] Guid? tenantId)
     {
         var response = await _projectService.GetAllAsync(tenantId);
         return FromService(response);
     }
 
-    [HttpGet("{id:int}")]
-    public async Task<IActionResult> GetById([FromRoute] int id, [FromQuery] int tenantId)
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> GetById([FromRoute] Guid id, [FromQuery] Guid tenantId)
     {
         var response = await _projectService.GetByIdAsync(id, tenantId);
         return FromService(response);
     }
 
-    [HttpPut("{id:int}")]
-    public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateProjectRequest request)
+    [HttpPut("{id:guid}")]
+    public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateProjectRequest request)
     {
         var response = await _projectService.UpdateAsync(id, request);
         return FromService(response);
     }
 
-    [HttpDelete("{id:int}")]
-    public async Task<IActionResult> Delete([FromRoute] int id, [FromQuery] int tenantId)
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> Delete([FromRoute] Guid id, [FromQuery] Guid tenantId)
     {
         var response = await _projectService.DeleteAsync(id, tenantId);
         return FromService(response);

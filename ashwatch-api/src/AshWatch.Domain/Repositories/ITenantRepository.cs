@@ -4,6 +4,6 @@ namespace AshWatch.Domain.Repositories;
 
 public interface ITenantRepository : IGenericRepository<Tenant>
 {
-    Task<bool> ExistsByNameAsync(string normalizedName, int? excludeId = null);
-    Task<bool> HasProjectsAsync(int tenantId);
+    Task<bool> ExistsByNameAsync(string normalizedName, Guid? excludeId = null);
+    Task<bool> HasProjectsAsync(Guid tenantId);
 }

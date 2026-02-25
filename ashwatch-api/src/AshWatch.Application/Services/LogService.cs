@@ -56,11 +56,11 @@ public class LogService : ILogService
         }
 
         var logsToPersist = new List<Log>(requests.Count);
-        var nextIdByScope = new Dictionary<string, int>();
 
         foreach (var request in requests)
         {
             var log = MapToLog(request);
+            logsToPersist.Add(log);
         }
 
         foreach (var log in logsToPersist)
@@ -75,14 +75,14 @@ public class LogService : ILogService
     {
         var errors = new List<string>();
 
-        if (request.TenantId <= 0)
+        if (request.TenantId == Guid.Empty)
         {
-            errors.Add("TenantId must be greater than zero.");
+            errors.Add("TenantId must be a valid GUID.");
         }
 
-        if (request.ProjectId <= 0)
+        if (request.ProjectId == Guid.Empty)
         {
-            errors.Add("ProjectId must be greater than zero.");
+            errors.Add("ProjectId must be a valid GUID.");
         }
 
         if (string.IsNullOrWhiteSpace(request.Message))
@@ -107,33 +107,11 @@ public class LogService : ILogService
         return errors;
     }
 
-    private static List<string> ValidateGetAllRequest(GetLogsFilterRequest request)
-    {
-        var errors = new List<string>();
-
-        if (request.TenantId <= 0)
-        {
-            errors.Add("TenantId must be greater than zero.");
-        }
-
-        if (request.ProjectId <= 0)
-        {
-            errors.Add("ProjectId must be greater than zero.");
-        }
-
-        if (request.StartDate.HasValue && request.EndDate.HasValue && request.StartDate > request.EndDate)
-        {
-            errors.Add("StartDate cannot be greater than EndDate.");
-        }
-
-        return errors;
-    }
-
     private static Log MapToLog(CreateLogRequest request)
     {
         return new Log
         {
-            Id = Guid.NewGuid().ToString(),
+            Id = Guid.NewGuid(),
             TenantId = request.TenantId,
             ProjectId = request.ProjectId,
             Author = string.IsNullOrWhiteSpace(request.Author) ? "system" : request.Author.Trim(),

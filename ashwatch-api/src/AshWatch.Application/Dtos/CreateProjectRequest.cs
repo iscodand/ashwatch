@@ -4,11 +4,9 @@ namespace AshWatch.Application.Dtos;
 
 public class CreateProjectRequest
 {
-    [Range(1, int.MaxValue, ErrorMessage = "TenantId must be greater than zero.")]
-    public int TenantId { get; set; }
+    public Guid TenantId { get; set; }
 
-    [Range(1, int.MaxValue, ErrorMessage = "AuthorId must be greater than zero.")]
-    public int AuthorId { get; set; }
+    public Guid AuthorId { get; set; }
 
     [Required(ErrorMessage = "Name is required.")]
     [StringLength(200, ErrorMessage = "Name cannot exceed 200 characters.")]

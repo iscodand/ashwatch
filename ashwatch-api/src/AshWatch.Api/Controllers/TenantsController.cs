@@ -28,22 +28,22 @@ public class TenantsController : BaseController
         return FromService(response);
     }
 
-    [HttpGet("{id:int}")]
-    public async Task<IActionResult> GetById([FromRoute] int id)
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> GetById([FromRoute] Guid id)
     {
         var response = await _tenantService.GetByIdAsync(id);
         return FromService(response);
     }
 
-    [HttpPut("{id:int}")]
-    public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateTenantRequest request)
+    [HttpPut("{id:guid}")]
+    public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateTenantRequest request)
     {
         var response = await _tenantService.UpdateAsync(id, request);
         return FromService(response);
     }
 
-    [HttpDelete("{id:int}")]
-    public async Task<IActionResult> Delete([FromRoute] int id)
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> Delete([FromRoute] Guid id)
     {
         var response = await _tenantService.DeleteAsync(id);
         return FromService(response);

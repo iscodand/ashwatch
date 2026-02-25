@@ -7,8 +7,8 @@ namespace AshWatch.Application.Contracts;
 public interface IProjectService
 {
     Task<DefaultResponse<Project>> CreateAsync(CreateProjectRequest request);
-    Task<DefaultResponse<List<Project>>> GetAllAsync(int? tenantId);
-    Task<DefaultResponse<Project>> GetByIdAsync(int id, int tenantId);
-    Task<DefaultResponse<Project>> UpdateAsync(int id, UpdateProjectRequest request);
-    Task<DefaultResponse<bool>> DeleteAsync(int id, int tenantId);
+    Task<DefaultResponse<List<Project>>> GetAllAsync(Guid? tenantId);
+    Task<DefaultResponse<Project>> GetByIdAsync(Guid id, Guid tenantId);
+    Task<DefaultResponse<Project>> UpdateAsync(Guid id, UpdateProjectRequest request);
+    Task<DefaultResponse<bool>> DeleteAsync(Guid id, Guid tenantId);
 }

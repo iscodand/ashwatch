@@ -18,6 +18,11 @@ public class TenantService : ITenantService
     public async Task<DefaultResponse<Tenant>> CreateAsync(CreateTenantRequest request)
     {
         var errors = RequestValidator.Validate(request);
+        if (request.AuthorId == Guid.Empty)
+        {
+            errors.Add("AuthorId must be a valid GUID.");
+        }
+
         if (errors.Count > 0)
         {
             return DefaultResponse<Tenant>.Fail("Validation failed.", errors.ToArray());
@@ -30,12 +35,9 @@ public class TenantService : ITenantService
             return DefaultResponse<Tenant>.Fail("Validation failed.", "A tenant with this name already exists.");
         }
 
-        var currentTenants = await _tenantRepository.GetAllAsync();
-        var nextId = currentTenants.Any() ? currentTenants.Max(x => x.Id) + 1 : 1;
-
         var tenant = new Tenant
         {
-            Id = nextId,
+            Id = Guid.NewGuid(),
             AuthorId = request.AuthorId,
             Name = normalizedName,
             Description = request.Description.Trim(),
@@ -52,11 +54,11 @@ public class TenantService : ITenantService
         return DefaultResponse<List<Tenant>>.Ok(tenants.OrderBy(x => x.Name).ToList());
     }
 
-    public async Task<DefaultResponse<Tenant>> GetByIdAsync(int id)
+    public async Task<DefaultResponse<Tenant>> GetByIdAsync(Guid id)
     {
-        if (id <= 0)
+        if (id == Guid.Empty)
         {
-            return DefaultResponse<Tenant>.Fail("Validation failed.", "Id must be greater than zero.");
+            return DefaultResponse<Tenant>.Fail("Validation failed.", "Id must be a valid GUID.");
         }
 
         try
@@ -70,14 +72,19 @@ public class TenantService : ITenantService
         }
     }
 
-    public async Task<DefaultResponse<Tenant>> UpdateAsync(int id, UpdateTenantRequest request)
+    public async Task<DefaultResponse<Tenant>> UpdateAsync(Guid id, UpdateTenantRequest request)
     {
-        if (id <= 0)
+        if (id == Guid.Empty)
         {
-            return DefaultResponse<Tenant>.Fail("Validation failed.", "Id must be greater than zero.");
+            return DefaultResponse<Tenant>.Fail("Validation failed.", "Id must be a valid GUID.");
         }
 
         var errors = RequestValidator.Validate(request);
+        if (request.AuthorId == Guid.Empty)
+        {
+            errors.Add("AuthorId must be a valid GUID.");
+        }
+
         if (errors.Count > 0)
         {
             return DefaultResponse<Tenant>.Fail("Validation failed.", errors.ToArray());
@@ -109,11 +116,11 @@ public class TenantService : ITenantService
         return DefaultResponse<Tenant>.Ok(currentTenant, "Tenant updated successfully.");
     }
 
-    public async Task<DefaultResponse<bool>> DeleteAsync(int id)
+    public async Task<DefaultResponse<bool>> DeleteAsync(Guid id)
     {
-        if (id <= 0)
+        if (id == Guid.Empty)
         {
-            return DefaultResponse<bool>.Fail("Validation failed.", "Id must be greater than zero.");
+            return DefaultResponse<bool>.Fail("Validation failed.", "Id must be a valid GUID.");
         }
 
         try
