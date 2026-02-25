@@ -11,12 +11,11 @@ builder.Services.AddScoped<ILogService, LogService>();
 builder.Services.AddScoped<ITenantService, TenantService>();
 builder.Services.AddScoped<IProjectService, ProjectService>();
 builder.Services.AddScoped<ILogRepository, LogRepository>();
-builder.Services.AddScoped<ITenantRepository, PostgresTenantRepository>();
-builder.Services.AddScoped<IProjectRepository, PostgresProjectRepository>();
-builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(PostgresGenericRepository<>));
+builder.Services.AddScoped<ITenantRepository, TenantRepository>();
+builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
-builder.Services.AddSingleton<DataContext>();
-builder.Services.AddDbContext<PostgresDataContext>(options =>
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresDb"))
 );
 

@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AshWatch.Infrastructure.Repositories;
 
-public class PostgresTenantRepository : PostgresGenericRepository<Tenant>, ITenantRepository
+public class TenantRepository : GenericRepository<Tenant>, ITenantRepository
 {
-    private readonly PostgresDataContext _dataContext;
+    private readonly ApplicationDbContext _dataContext;
 
-    public PostgresTenantRepository(PostgresDataContext dataContext) : base(dataContext)
+    public TenantRepository(ApplicationDbContext dataContext) : base(dataContext)
     {
         _dataContext = dataContext;
     }

@@ -3,30 +3,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AshWatch.Infrastructure.Data;
 
-public class PostgresDataContext : DbContext
+public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
 {
-    public PostgresDataContext(DbContextOptions<PostgresDataContext> options)
-        : base(options) { }
-
-    public DbSet<Log> Logs => Set<Log>();
     public DbSet<Tenant> Tenants => Set<Tenant>();
     public DbSet<Project> Projects => Set<Project>();
     public DbSet<User> Users => Set<User>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Log>(entity =>
-        {
-            entity.ToTable("logs");
-            entity.HasKey(x => x.Id);
-            entity.Property(x => x.Id).ValueGeneratedNever();
-            entity.Property(x => x.Author).HasMaxLength(120).IsRequired();
-            entity.Property(x => x.Message).HasMaxLength(4000).IsRequired();
-            entity.Property(x => x.Level).HasMaxLength(20).IsRequired();
-            entity.Property(x => x.Timestamp).IsRequired();
-            entity.HasIndex(x => new { x.TenantId, x.ProjectId, x.Timestamp });
-        });
-
         modelBuilder.Entity<Tenant>(entity =>
         {
             entity.ToTable("tenants");
