@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace AshWatch.Api.Controllers;
 
 [Route("logs")]
-public class LogsController : ApiResponseControllerBase
+public class LogsController : BaseController
 {
     private readonly ILogService _logService;
 
@@ -25,20 +25,6 @@ public class LogsController : ApiResponseControllerBase
     public async Task<IActionResult> CreateBatch([FromBody] List<CreateLogRequest> requests)
     {
         var response = await _logService.LogBatchAsync(requests);
-        return FromService(response);
-    }
-
-    [HttpGet("{id:int}")]
-    public async Task<IActionResult> GetById([FromRoute] int id, [FromQuery] int tenantId, [FromQuery] int projectId)
-    {
-        var response = await _logService.GetLogByIdAsync(id, tenantId, projectId);
-        return FromService(response);
-    }
-
-    [HttpGet]
-    public async Task<IActionResult> GetAll([FromQuery] GetLogsFilterRequest request)
-    {
-        var response = await _logService.GetAllLogsAsync(request);
         return FromService(response);
     }
 }

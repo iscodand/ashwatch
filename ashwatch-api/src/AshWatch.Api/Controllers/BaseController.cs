@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace AshWatch.Api.Controllers;
 
 [ApiController]
-public abstract class ApiResponseControllerBase : ControllerBase
+public abstract class BaseController : ControllerBase
 {
     protected IActionResult FromService<T>(DefaultResponse<T> response)
     {

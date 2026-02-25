@@ -2,7 +2,7 @@ namespace AshWatch.Domain.Entities;
 
 public class Log
 {
-    public int Id { get; set; }
+    public string Id { get; set; }
     public int TenantId { get; set; }
     public int ProjectId { get; set; }
     public string Author { get; set; }

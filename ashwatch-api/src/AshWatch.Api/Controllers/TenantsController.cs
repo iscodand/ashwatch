@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace AshWatch.Api.Controllers;
 
 [Route("tenants")]
-public class TenantsController : ApiResponseControllerBase
+public class TenantsController : BaseController
 {
     private readonly ITenantService _tenantService;
 

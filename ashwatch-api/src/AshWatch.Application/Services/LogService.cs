@@ -33,10 +33,7 @@ public class LogService : ILogService
             return DefaultResponse<Log>.Fail("Validation failed.", errors.ToArray());
         }
 
-        var currentLogs = await _logRepository.GetAllAsync(request.TenantId, request.ProjectId, null, null);
-        var nextId = currentLogs.Any() ? currentLogs.Max(x => x.Id) + 1 : 1;
-
-        var log = MapToLog(request, nextId);
+        var log = MapToLog(request);
         await _logRepository.AddAsync(log);
 
         return DefaultResponse<Log>.Ok(log, "Log created successfully.");
@@ -63,16 +60,7 @@ public class LogService : ILogService
 
         foreach (var request in requests)
         {
-            var scopeKey = $"{request.TenantId}:{request.ProjectId}";
-            if (!nextIdByScope.TryGetValue(scopeKey, out var nextId))
-            {
-                var currentLogs = await _logRepository.GetAllAsync(request.TenantId, request.ProjectId, null, null);
-                nextId = currentLogs.Any() ? currentLogs.Max(x => x.Id) + 1 : 1;
-            }
-
-            var log = MapToLog(request, nextId);
-            logsToPersist.Add(log);
-            nextIdByScope[scopeKey] = nextId + 1;
+            var log = MapToLog(request);
         }
 
         foreach (var log in logsToPersist)
@@ -81,43 +69,6 @@ public class LogService : ILogService
         }
 
         return DefaultResponse<List<Log>>.Ok(logsToPersist, "Batch logs created successfully.");
-    }
-
-    public async Task<DefaultResponse<Log>> GetLogByIdAsync(int id, int tenantId, int projectId)
-    {
-        if (id <= 0 || tenantId <= 0 || projectId <= 0)
-        {
-            return DefaultResponse<Log>.Fail(
-                "Validation failed.",
-                "Id, tenantId and projectId must be greater than zero."
-            );
-        }
-
-        var log = await _logRepository.GetByIdAsync(id, tenantId, projectId);
-        if (log is null)
-        {
-            return DefaultResponse<Log>.Fail("Log not found.");
-        }
-
-        return DefaultResponse<Log>.Ok(log);
-    }
-
-    public async Task<DefaultResponse<List<Log>>> GetAllLogsAsync(GetLogsFilterRequest request)
-    {
-        var validationErrors = ValidateGetAllRequest(request);
-        if (validationErrors.Count > 0)
-        {
-            return DefaultResponse<List<Log>>.Fail("Validation failed.", validationErrors.ToArray());
-        }
-
-        var logs = await _logRepository.GetAllAsync(
-            request.TenantId,
-            request.ProjectId,
-            request.StartDate,
-            request.EndDate
-        );
-
-        return DefaultResponse<List<Log>>.Ok(logs.ToList());
     }
 
     private static List<string> ValidateCreateRequest(CreateLogRequest request)
@@ -178,11 +129,11 @@ public class LogService : ILogService
         return errors;
     }
 
-    private static Log MapToLog(CreateLogRequest request, int id)
+    private static Log MapToLog(CreateLogRequest request)
     {
         return new Log
         {
-            Id = id,
+            Id = Guid.NewGuid().ToString(),
             TenantId = request.TenantId,
             ProjectId = request.ProjectId,
             Author = string.IsNullOrWhiteSpace(request.Author) ? "system" : request.Author.Trim(),

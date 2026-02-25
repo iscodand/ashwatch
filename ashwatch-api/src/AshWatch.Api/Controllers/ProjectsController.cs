@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace AshWatch.Api.Controllers;
 
 [Route("projects")]
-public class ProjectsController : ApiResponseControllerBase
+public class ProjectsController : BaseController
 {
     private readonly IProjectService _projectService;
 
