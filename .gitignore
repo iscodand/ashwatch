@@ -417,93 +417,67 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-net472/Microsoft.Build.Locator.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-net472/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.exe
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-net472/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.exe.config
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-net472/Microsoft.IO.Redist.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-net472/Newtonsoft.Json.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-net472/System.Buffers.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-net472/System.Collections.Immutable.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-net472/System.CommandLine.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-net472/System.Memory.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-net472/System.Numerics.Vectors.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-net472/System.Runtime.CompilerServices.Unsafe.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-net472/System.Threading.Tasks.Extensions.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-net472/cs/System.CommandLine.resources.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-net472/de/System.CommandLine.resources.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-net472/es/System.CommandLine.resources.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-net472/fr/System.CommandLine.resources.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-net472/it/System.CommandLine.resources.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-net472/ja/System.CommandLine.resources.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-net472/ko/System.CommandLine.resources.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-net472/pl/System.CommandLine.resources.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-net472/pt-BR/System.CommandLine.resources.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-net472/ru/System.CommandLine.resources.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-net472/tr/System.CommandLine.resources.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-net472/zh-Hans/System.CommandLine.resources.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-net472/zh-Hant/System.CommandLine.resources.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-netcore/Microsoft.Build.Locator.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-netcore/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.deps.json
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-netcore/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-netcore/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.runtimeconfig.json
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-netcore/Newtonsoft.Json.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-netcore/System.Collections.Immutable.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-netcore/System.CommandLine.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-netcore/cs/System.CommandLine.resources.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-netcore/de/System.CommandLine.resources.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-netcore/es/System.CommandLine.resources.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-netcore/fr/System.CommandLine.resources.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-netcore/it/System.CommandLine.resources.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-netcore/ja/System.CommandLine.resources.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-netcore/ko/System.CommandLine.resources.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-netcore/pl/System.CommandLine.resources.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-netcore/pt-BR/System.CommandLine.resources.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-netcore/ru/System.CommandLine.resources.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-netcore/tr/System.CommandLine.resources.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-netcore/zh-Hans/System.CommandLine.resources.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-netcore/zh-Hant/System.CommandLine.resources.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-net472/Microsoft.Build.Locator.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-net472/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.exe
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-net472/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.exe.config
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-net472/Microsoft.IO.Redist.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-net472/Newtonsoft.Json.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-net472/System.Buffers.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-net472/System.Collections.Immutable.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-net472/System.CommandLine.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-net472/System.Memory.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-net472/System.Numerics.Vectors.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-net472/System.Runtime.CompilerServices.Unsafe.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-net472/System.Threading.Tasks.Extensions.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-net472/cs/System.CommandLine.resources.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-net472/de/System.CommandLine.resources.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-net472/es/System.CommandLine.resources.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-net472/fr/System.CommandLine.resources.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-net472/it/System.CommandLine.resources.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-net472/ja/System.CommandLine.resources.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-net472/ko/System.CommandLine.resources.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-net472/pl/System.CommandLine.resources.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-net472/pt-BR/System.CommandLine.resources.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-net472/ru/System.CommandLine.resources.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-net472/tr/System.CommandLine.resources.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-net472/zh-Hans/System.CommandLine.resources.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-net472/zh-Hant/System.CommandLine.resources.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-netcore/Microsoft.Build.Locator.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-netcore/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.deps.json
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-netcore/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-netcore/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.runtimeconfig.json
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-netcore/Newtonsoft.Json.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-netcore/System.Collections.Immutable.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-netcore/System.CommandLine.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-netcore/cs/System.CommandLine.resources.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-netcore/de/System.CommandLine.resources.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-netcore/es/System.CommandLine.resources.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-netcore/fr/System.CommandLine.resources.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-netcore/it/System.CommandLine.resources.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-netcore/ja/System.CommandLine.resources.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-netcore/ko/System.CommandLine.resources.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-netcore/pl/System.CommandLine.resources.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-netcore/pt-BR/System.CommandLine.resources.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-netcore/ru/System.CommandLine.resources.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-netcore/tr/System.CommandLine.resources.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-netcore/zh-Hans/System.CommandLine.resources.dll
-ashwatch-api/src/AshWatch.Api/bin/Debug/net10.0/BuildHost-netcore/zh-Hant/System.CommandLine.resources.dll
+
+# Python ignore
+
+# Byte-code files
+*.pyc
+__pycache__/
+*.pyd
+*.pyo
+
+# Virtual environment
+.venv/
+env/
+venv/
+
+# IDE-specific files
+.idea/
+.vscode/
+
+# Environment variables
+.env
+.flaskenv
+
+# Testing
+.pytest_cache/
+.coverage
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Golang ignore
+
+# If you prefer the allow list template instead of the deny list, see community template:
+# https://github.com/github/gitignore/blob/main/community/Golang/Go.AllowList.gitignore
+#
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary, built with `go test -c`
+*.test
+
+# Code coverage profiles and other test artifacts
+*.out
+coverage.*
+*.coverprofile
+profile.cov
+
+# Dependency directories (remove the comment below to include it)
+# vendor/
+
+# Go workspace file
+go.work
+go.work.sum
+
+# env file
+.env
+
+# Editor/IDE
+.idea/
+.vscode/
