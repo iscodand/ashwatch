@@ -1,5 +1,7 @@
 import json
 from confluent_kafka import Consumer, KafkaError, Message
+from pymongo import MongoClient
+import db
 
 
 LOGS_TOPIC: str = "logs.raw"
@@ -27,6 +29,12 @@ try:
         data = json.loads(msg.value().decode("utf-8"))
 
         # todo: process the message and persists on mongodb
+
+        database = db.get_database()
+        collection = database["logs"]
+
+        collection.insert_one(data)
+
         print("LOG: ", data)
 
         consumer.commit(message=msg)
