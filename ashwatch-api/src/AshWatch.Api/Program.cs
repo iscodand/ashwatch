@@ -2,6 +2,7 @@ using AshWatch.Application.Contracts;
 using AshWatch.Application.Services;
 using AshWatch.Domain.Repositories;
 using AshWatch.Infrastructure.Data;
+using AshWatch.Infrastructure.Producers;
 using AshWatch.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,6 +15,8 @@ builder.Services.AddScoped<ILogRepository, LogRepository>();
 builder.Services.AddScoped<ITenantRepository, TenantRepository>();
 builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
+builder.Services.AddSingleton<ILogQueueProducer, KafkaLogQueueProducer>();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresDb"))

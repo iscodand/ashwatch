@@ -19,10 +19,12 @@ public class LogService : ILogService
     ];
 
     private readonly ILogRepository _logRepository;
+    private ILogQueueProducer _logQueueProducer;
 
-    public LogService(ILogRepository logRepository)
+    public LogService(ILogRepository logRepository, ILogQueueProducer logQueueProducer)
     {
         _logRepository = logRepository;
+        _logQueueProducer = logQueueProducer;
     }
 
     public async Task<DefaultResponse<Log>> LogAsync(CreateLogRequest request)
@@ -33,8 +35,9 @@ public class LogService : ILogService
             return DefaultResponse<Log>.Fail("Validation failed.", errors.ToArray());
         }
 
-        var log = MapToLog(request);
-        await _logRepository.AddAsync(log);
+        Log log = MapToLog(request);
+
+        await _logQueueProducer.ProduceAsync(log);
 
         return DefaultResponse<Log>.Ok(log, "Log created successfully.");
     }
@@ -65,7 +68,7 @@ public class LogService : ILogService
 
         foreach (var log in logsToPersist)
         {
-            await _logRepository.AddAsync(log);
+            await _logQueueProducer.ProduceAsync(log);
         }
 
         return DefaultResponse<List<Log>>.Ok(logsToPersist, "Batch logs created successfully.");

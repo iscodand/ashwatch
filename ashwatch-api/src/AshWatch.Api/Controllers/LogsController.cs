@@ -18,13 +18,13 @@ public class LogsController : BaseController
     public async Task<IActionResult> Create([FromBody] CreateLogRequest request)
     {
         var response = await _logService.LogAsync(request);
-        return FromService(response);
+        return Accepted(response);
     }
 
     [HttpPost("batch")]
     public async Task<IActionResult> CreateBatch([FromBody] List<CreateLogRequest> requests)
     {
         var response = await _logService.LogBatchAsync(requests);
-        return FromService(response);
+        return Accepted(response);
     }
 }
