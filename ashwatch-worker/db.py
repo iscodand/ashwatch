@@ -1,8 +1,13 @@
+import os
+
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
+from dotenv import load_dotenv
 
 
-MONGO_URI="mongodb://root:rootpass@localhost:27017/?authSource=admin"
+load_dotenv()
+
+MONGO_URI=os.getenv("MONGO_URI")
 
 
 def get_database():
