@@ -1,12 +1,17 @@
+using Amazon.SimpleNotificationService;
 using AshWatch.Application.Contracts;
 using AshWatch.Application.Services;
 using AshWatch.Domain.Repositories;
+using AshWatch.Infrastructure.AWS;
 using AshWatch.Infrastructure.Data;
 using AshWatch.Infrastructure.Producers;
 using AshWatch.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
+builder.Services.AddAWSService<IAmazonSimpleNotificationService>();
 
 builder.Services.AddScoped<ILogService, LogService>();
 builder.Services.AddScoped<ITenantService, TenantService>();
@@ -17,6 +22,7 @@ builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
 builder.Services.AddSingleton<ILogQueueProducer, KafkaLogQueueProducer>();
+builder.Services.AddSingleton<IPublisher, Publisher>();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresDb"))
