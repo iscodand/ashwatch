@@ -6,7 +6,8 @@ using AshWatch.Domain.Repositories;
 
 namespace AshWatch.Application.Services;
 
-public class LogService : ILogService
+public class LogService(ILogRepository logRepository, ILogQueueProducer logQueueProducer, IPublisher publisher)
+    : ILogService
 {
     private static readonly HashSet<string> AllowedLevels =
     [
@@ -18,14 +19,7 @@ public class LogService : ILogService
         "FATAL"
     ];
 
-    private readonly ILogRepository _logRepository;
-    private ILogQueueProducer _logQueueProducer;
-
-    public LogService(ILogRepository logRepository, ILogQueueProducer logQueueProducer)
-    {
-        _logRepository = logRepository;
-        _logQueueProducer = logQueueProducer;
-    }
+    private readonly ILogRepository _logRepository = logRepository;
 
     public async Task<DefaultResponse<Log>> LogAsync(CreateLogRequest request)
     {
@@ -35,9 +29,10 @@ public class LogService : ILogService
             return DefaultResponse<Log>.Fail("Validation failed.", errors.ToArray());
         }
 
-        Log log = MapToLog(request);
+        Log log = CreateLogRequest.MapToLog(request);
 
-        await _logQueueProducer.ProduceAsync(log);
+        await publisher.PublishAsync(log);
+        await logQueueProducer.ProduceAsync(log);
 
         return DefaultResponse<Log>.Ok(log, "Log created successfully.");
     }
@@ -62,13 +57,13 @@ public class LogService : ILogService
 
         foreach (var request in requests)
         {
-            var log = MapToLog(request);
+            var log = CreateLogRequest.MapToLog(request);
             logsToPersist.Add(log);
         }
 
         foreach (var log in logsToPersist)
         {
-            await _logQueueProducer.ProduceAsync(log);
+            await logQueueProducer.ProduceAsync(log);
         }
 
         return DefaultResponse<List<Log>>.Ok(logsToPersist, "Batch logs created successfully.");
@@ -108,29 +103,5 @@ public class LogService : ILogService
         }
 
         return errors;
-    }
-
-    private static Log MapToLog(CreateLogRequest request)
-    {
-        return new Log
-        {
-            Id = Guid.NewGuid(),
-            TenantId = request.TenantId,
-            ProjectId = request.ProjectId,
-            Author = string.IsNullOrWhiteSpace(request.Author) ? "system" : request.Author.Trim(),
-            Message = request.Message.Trim(),
-            Level = NormalizeLevel(request.Level),
-            Timestamp = request.Timestamp == default ? DateTime.UtcNow : request.Timestamp
-        };
-    }
-
-    private static string NormalizeLevel(string? level)
-    {
-        if (string.IsNullOrWhiteSpace(level))
-        {
-            return "INFO";
-        }
-
-        return level.Trim().ToUpperInvariant();
     }
 }
