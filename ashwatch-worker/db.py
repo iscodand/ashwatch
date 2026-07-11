@@ -1,6 +1,6 @@
 import os
+import logging
 from pymongo import MongoClient
-from pymongo.errors import ConnectionFailure
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -16,28 +16,23 @@ def get_database():
     global _client
 
     try:
-        print(repr(MONGO_CA_FILE))
-        print(os.path.exists(MONGO_CA_FILE))
-
-        if not os.path.exists(MONGO_CA_FILE):
-            raise Exception(f"CA file not found at: {MONGO_CA_FILE}")
-
         if _client is None:
-            _client = MongoClient(
-                MONGO_URI,
-                tls=True,
-                tlsCAFile=MONGO_CA_FILE,
-                retryWrites=False,
-                serverSelectionTimeoutMS=5000,
-                tlsAllowInvalidHostnames=True
-            )
+            kwargs = {
+                "retryWrites": False,
+                "serverSelectionTimeoutMS": 5000,
+            }
 
+            if MONGO_CA_FILE and os.path.exists(MONGO_CA_FILE):
+                kwargs["tls"] = True
+                kwargs["tlsCAFile"] = MONGO_CA_FILE
+                kwargs["tlsAllowInvalidHostnames"] = True
+
+            _client = MongoClient(MONGO_URI, **kwargs)
             _client.admin.command("ping")
-            print("✅ Connected to Mongo (DocumentDB)!")
+            logging.info("Connected to MongoDB")
 
         return _client[MONGO_DB_NAME]
 
     except Exception as e:
-        print(f"❌ Error: {e}")
+        logging.exception("MongoDB connection error: %s", e)
         return None
-    

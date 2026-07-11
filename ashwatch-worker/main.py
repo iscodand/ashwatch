@@ -24,10 +24,6 @@ QUEUE_NAME=os.getenv("QUEUE_NAME")
 
 running = True
 
-sqs = boto3.resource("sqs")
-queue = sqs.get_queue_by_name(QueueName=QUEUE_NAME)
-
-
 def stop_worker(signum: int, frame: Any) -> None:
     global running
     logging.info("Encerrando working...")
@@ -60,7 +56,8 @@ def process_message(payload) -> None:
 
 
 def main() -> None:
-    sqs = boto3.client("sqs", region_name=AWS_REGION)
+    endpoint_url = os.getenv("AWS_ENDPOINT_URL")
+    sqs = boto3.client("sqs", region_name=AWS_REGION, endpoint_url=endpoint_url)
 
     logging.info("Worker started, listening main queue...")
 
