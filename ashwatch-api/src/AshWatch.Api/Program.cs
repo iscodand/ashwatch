@@ -10,8 +10,20 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
-builder.Services.AddAWSService<IAmazonSimpleNotificationService>();
+var awsServiceUrl = builder.Configuration["AWS:ServiceURL"];
+if (!string.IsNullOrEmpty(awsServiceUrl))
+{
+    builder.Services.AddSingleton<IAmazonSimpleNotificationService>(
+        new AmazonSimpleNotificationServiceClient(
+            new AmazonSimpleNotificationServiceConfig { ServiceURL = awsServiceUrl }
+        )
+    );
+}
+else
+{
+    builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
+    builder.Services.AddAWSService<IAmazonSimpleNotificationService>();
+}
 
 builder.Services.AddScoped<ILogService, LogService>();
 builder.Services.AddScoped<ITenantService, TenantService>();
@@ -28,6 +40,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresDb"))
 );
 
+builder.Services.AddCors();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApiDocument(config =>
@@ -47,6 +60,8 @@ app.UseSwaggerUi(config =>
     config.DocumentPath = "/swagger/{documentName}/swagger.json";
     config.DocExpansion = "list";
 });
+
+app.UseCors(policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
 app.MapControllers();
 
