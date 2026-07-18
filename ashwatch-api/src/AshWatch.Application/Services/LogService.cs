@@ -32,7 +32,7 @@ public class LogService(ILogRepository logRepository, ILogQueueProducer logQueue
         Log log = CreateLogRequest.MapToLog(request);
 
         await publisher.PublishAsync(log);
-        await logQueueProducer.ProduceAsync(log);
+        // await logQueueProducer.ProduceAsync(log);
 
         return DefaultResponse<Log>.Ok(log, "Log created successfully.");
     }
