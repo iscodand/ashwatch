@@ -37,3 +37,13 @@ jobs:
           docker tag $REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $REGISTRY/$ECR_REPOSITORY:latest
           docker push $REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           docker push $REGISTRY/$ECR_REPOSITORY:latest
+
+      - name: Deploy to Lambda
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          aws lambda update-function-code \
+            --function-name ashwatch-worker \
+            --image-uri $REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG \
+            --region ${{ env.AWS_REGION }}
