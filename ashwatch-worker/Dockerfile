@@ -1,10 +1,8 @@
-FROM python:3.11-slim
+FROM public.ecr.aws/lambda/python:3.11
 
-WORKDIR /app
-
-COPY requirements.txt .
+COPY requirements.txt ${LAMBDA_TASK_ROOT}
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
+COPY main.py ${LAMBDA_TASK_ROOT}
 
-CMD ["python", "main.py"]
+CMD ["main.lambda_handler"]
