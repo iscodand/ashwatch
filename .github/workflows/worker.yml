@@ -28,7 +28,7 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v2
 
       - name: Build, tag and push
-        working-directory: ./worker
+        working-directory: ./ashwatch-worker
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: ${{ github.sha }}
