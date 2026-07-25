@@ -31,25 +31,32 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Build image
-        id: build-image
-        working-directory: ./ashwatch-api
+      - name: Check if image already exists
+        id: check-image
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker build -t $REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-          docker tag $REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $REGISTRY/$ECR_REPOSITORY:latest
+          if aws ecr describe-images \
+              --repository-name $ECR_REPOSITORY \
+              --image-ids imageTag=$IMAGE_TAG \
+              --region ${{ env.AWS_REGION }} > /dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
           echo "image=$REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> "$GITHUB_OUTPUT"
 
-      - name: Push image
+      - name: Build image
+        if: steps.check-image.outputs.exists == 'false'
         working-directory: ./ashwatch-api
-        env:
-          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker push $REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          docker push $REGISTRY/$ECR_REPOSITORY:latest
+          docker build -t ${{ steps.check-image.outputs.image }} .
+
+      - name: Push image
+        if: steps.check-image.outputs.exists == 'false'
+        run: |
+          docker push ${{ steps.check-image.outputs.image }}
 
       - name: Download current task definition
         run: |
@@ -63,7 +70,7 @@ jobs:
         with:
           task-definition: task-definition.json
           container-name: ${{ env.CONTAINER_NAME }}
-          image: ${{ steps.build-image.outputs.image }}
+          image: ${{ steps.check-image.outputs.image }}
 
       - name: ECS Deploy
         uses: aws-actions/amazon-ecs-deploy-task-definition@v2
