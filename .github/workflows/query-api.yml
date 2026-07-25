@@ -1,4 +1,4 @@
-name: Build and Push API (.NET)
+name: Build and Push API (Golang)
 
 on:
   workflow_dispatch:
@@ -9,11 +9,11 @@ permissions:
 
 env:
   AWS_REGION: us-east-1
-  ECR_REPOSITORY: ashwatch-command-api
+  ECR_REPOSITORY: ashwatch-query-api
   ECS_CLUSTER: ashwatch-cluster
-  ECS_SERVICE: ashwatch-command-api
-  ECS_TASK_DEFINITION_FAMILY: ashwatch-command-api
-  CONTAINER_NAME: command-api
+  ECS_SERVICE: ashwatch-query-api
+  ECS_TASK_DEFINITION_FAMILY: ashwatch-query-api
+  CONTAINER_NAME: query-api
 
 jobs:
   build-and-push:
@@ -31,8 +31,7 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Build image
-        id: build-image
+      - name: Build, tag and push
         working-directory: ./ashwatch-api
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
@@ -40,14 +39,6 @@ jobs:
         run: |
           docker build -t $REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker tag $REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $REGISTRY/$ECR_REPOSITORY:latest
-          echo "image=$REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> "$GITHUB_OUTPUT"
-
-      - name: Push image
-        working-directory: ./ashwatch-api
-        env:
-          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          IMAGE_TAG: ${{ github.sha }}
-        run: |
           docker push $REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           docker push $REGISTRY/$ECR_REPOSITORY:latest
 
@@ -55,9 +46,9 @@ jobs:
         run: |
           aws ecs describe-task-definition \
             --task-definition ${{ env.ECS_TASK_DEFINITION_FAMILY }} \
-            --query taskDefinition > task-definition.json
+            --query taskDefinition > -task-definition.json
 
-      - name: Render new task definition with new image
+      - name: Renderize new task definition with new image
         id: render-task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
@@ -71,4 +62,4 @@ jobs:
           task-definition: ${{ steps.render-task-def.outputs.task-definition }}
           service: ${{ env.ECS_SERVICE }}
           cluster: ${{ env.ECS_CLUSTER }}
-          wait-for-service-stability: true
+          with-for-service-stability: true
