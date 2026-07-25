@@ -42,8 +42,7 @@ jobs:
           output=$(aws ecr describe-images \
               --repository-name $ECR_REPOSITORY \
               --image-ids imageTag=$IMAGE_TAG \
-              --region ${{ env.AWS_REGION }} 2>&1)
-          exit_code=$?
+              --region ${{ env.AWS_REGION }} 2>&1) && exit_code=0 || exit_code=$?
 
           if [ $exit_code -eq 0 ]; then
             echo "exists=true" >> "$GITHUB_OUTPUT"
