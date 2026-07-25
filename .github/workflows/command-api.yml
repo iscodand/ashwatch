@@ -11,7 +11,7 @@ env:
   AWS_REGION: us-east-1
   ECR_REPOSITORY: ashwatch-command-api
   ECS_CLUSTER: ashwatch_cluster
-  ECS_SERVICE: ashwatch-command-api
+  ECS_SERVICE: ashwatch-command-api-service
   ECS_TASK_DEFINITION_FAMILY: ashwatch-command-api
   CONTAINER_NAME: command-api
 
