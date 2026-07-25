@@ -53,7 +53,7 @@ resource "aws_iam_role" "github_actions" {
   assume_role_policy = data.aws_iam_policy_document.github_assume_role.json
 }
 
-data "aws_iam_policy_document" "github_ecr_push" {
+data "aws_iam_policy_document" "github_actions_deploy" {
   statement {
     sid    = "ECRAuth"
     effect = "Allow"
@@ -89,12 +89,43 @@ data "aws_iam_policy_document" "github_ecr_push" {
     ]
     resources = ["arn:aws:lambda:us-east-1:*:function:ashwatch-worker"]
   }
+
+  statement {
+    sid    = "ECSTaskDefinitionActions"
+    effect = "Allow"
+    actions = [
+      "ecs:DescribeTaskDefinition",
+      "ecs:RegisterTaskDefinition"
+    ]
+    resources = ["*"]
+  }
+
+  statement {
+    sid    = "ECSServiceActions"
+    effect = "Allow"
+    actions = [
+      "ecs:UpdateService",
+      "ecs:DescribeServices"
+    ]
+    resources = [
+      "arn:aws:ecs:us-east-1:*:service/ashwatch-cluster/ashwatch-command-api"
+    ]
+  }
+
+  statement {
+    sid    = "PassExecutionAndTaskRoles"
+    effect = "Allow"
+    actions = [
+      "iam:PassRole"
+    ]
+    resources = ["*"]
+  }
 }
 
 resource "aws_iam_role_policy" "github_runner_ecr" {
   name   = "ashwatch-github-runner-ecr-policy"
   role   = aws_iam_role.github_actions.id
-  policy = data.aws_iam_policy_document.github_ecr_push.json
+  policy = data.aws_iam_policy_document.github_actions_deploy.json
 }
 
 data "terraform_remote_state" "ecr_dynamodb" {
