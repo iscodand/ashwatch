@@ -72,7 +72,8 @@ data "aws_iam_policy_document" "github_actions_deploy" {
       "ecr:InitiateLayerUpload",
       "ecr:UploadLayerPart",
       "ecr:CompleteLayerUpload",
-      "ecr:BatchGetImage"
+      "ecr:BatchGetImage",
+      "ecr:DescribeImages"
     ]
     resources = [
       data.terraform_remote_state.ecr_dynamodb.outputs.command_api_repository_arn,
@@ -108,7 +109,7 @@ data "aws_iam_policy_document" "github_actions_deploy" {
       "ecs:DescribeServices"
     ]
     resources = [
-      "arn:aws:ecs:us-east-1:*:service/ashwatch-cluster/ashwatch-command-api"
+      "arn:aws:ecs:us-east-1:*:service/ashwatch_cluster/ashwatch-command-api"
     ]
   }
 
