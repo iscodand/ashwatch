@@ -153,6 +153,10 @@ resource "aws_ecs_task_definition" "ashwatch_query_api" {
         {
           name  = "DYNAMODB_TABLE"
           value = data.terraform_remote_state.ecr_dynamodb.outputs.dynamodb_table_name
+        },
+        {
+          name  = "AWS_REGION"
+          value = "us-east-1"
         }
       ]
 
@@ -219,9 +223,12 @@ data "aws_iam_policy_document" "command_api_permissions" {
 
 data "aws_iam_policy_document" "query_api_permissions" {
   statement {
-    effect    = "Allow"
-    actions   = ["dynamodb:GetItem", "dynamodb:Query"]
-    resources = [data.terraform_remote_state.ecr_dynamodb.outputs.dynamodb_table_arn]
+    effect  = "Allow"
+    actions = ["dynamodb:GetItem", "dynamodb:Query"]
+    resources = [
+      data.terraform_remote_state.ecr_dynamodb.outputs.dynamodb_table_arn,
+      "${data.terraform_remote_state.ecr_dynamodb.outputs.dynamodb_table_arn}/index/*"
+    ]
   }
 }
 
