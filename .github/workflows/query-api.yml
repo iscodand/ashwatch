@@ -56,7 +56,7 @@ jobs:
 
       - name: Build image
         if: steps.check-image.outputs.exists == 'false'
-        working-directory: ./ashwatch-api
+        working-directory: ./ashwatch-query
         run: |
           docker build -t ${{ steps.check-image.outputs.image }} .
 
