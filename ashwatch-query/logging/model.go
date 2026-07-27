@@ -1,13 +1,11 @@
 package logging
 
-import "time"
-
 type Log struct {
-	_id       int
-	TenantId  int
-	ProjectId int
-	Author    string
-	Timestamp time.Time
-	Level     string
-	Message   string
+	ID        string `json:"id" dynamodbav:"id"`
+	TenantID  string `json:"tenantId" dynamodbav:"tenantId"`
+	ProjectID string `json:"projectId" dynamodbav:"projectId"`
+	Author    string `json:"author" dynamodbav:"author"`
+	Timestamp string `json:"timestamp" dynamodbav:"timestamp"`
+	Level     string `json:"level" dynamodbav:"level"`
+	Message   string `json:"message" dynamodbav:"message"`
 }
