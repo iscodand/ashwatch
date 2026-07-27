@@ -2,35 +2,16 @@ package db
 
 import (
 	"context"
-	"fmt"
-	"log"
-	"os"
-	"time"
 
-	"github.com/joho/godotenv"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 )
 
-func Connect() (*mongo.Client, error) {
-	_ = godotenv.Load(".env")
-
-	MONGO_URI := os.Getenv("MONGO_URI")
-
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI(MONGO_URI))
+func Connect(ctx context.Context) (*dynamodb.Client, error) {
+	cfg, err := config.LoadDefaultConfig(ctx)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
-	err = client.Ping(context.Background(), nil)
-	if err != nil {
-		log.Fatal(err)
-	} else {
-		fmt.Println("Connected to Mongo!")
-	}
-
-	return client, nil
+	return dynamodb.NewFromConfig(cfg), nil
 }
