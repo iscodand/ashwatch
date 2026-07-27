@@ -109,7 +109,8 @@ data "aws_iam_policy_document" "github_actions_deploy" {
       "ecs:DescribeServices"
     ]
     resources = [
-      "arn:aws:ecs:us-east-1:*:service/ashwatch_cluster/ashwatch-command-api"
+      "arn:aws:ecs:us-east-1:*:service/ashwatch_cluster/ashwatch-command-api-service",
+      "arn:aws:ecs:us-east-1:*:service/ashwatch_cluster/ashwatch-query-api-service"
     ]
   }
 
