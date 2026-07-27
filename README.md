@@ -11,25 +11,26 @@ AshWatch follows a **CQRS (Command Query Responsibility Segregation)** pattern w
 | Service | Language | Role |
 |---------|----------|------|
 | **ashwatch-api** | C# / .NET 10 | Command API -- receives log entries, manages tenants and projects (PostgreSQL via EF Core), and publishes log events to AWS SNS and Kafka |
-| **ashwatch-worker** | Python 3.11 | Consumer -- polls AWS SQS for log events and persists them into MongoDB |
-| **ashwatch-query** | Go 1.25 | Query API -- reads logs from MongoDB and serves them with filtering support |
+| **ashwatch-worker** | Python 3.11 | Consumer -- AWS Lambda triggered by SQS, deserializes each log event and persists it into DynamoDB |
+| **ashwatch-query** | Go 1.25 | Query API -- reads logs from DynamoDB and serves them with filtering support |
 
 ### Data Flow
 
 1. A client sends a log entry (single or batch) to the **Command API** (`POST /logs`)
 2. The API validates the payload, publishes it to **AWS SNS** (FIFO topic), and produces it to **Kafka**
 3. SNS fans out the message to an **AWS SQS** FIFO queue
-4. The **Worker** long-polls SQS, deserializes each message, and inserts it into **MongoDB**
-5. The **Query API** reads from MongoDB and returns logs to the client (`GET /logs`)
+4. The **Worker** (AWS Lambda) is triggered in batches by the SQS event source mapping, deserializes each message, and inserts it into **DynamoDB**
+5. The **Query API** reads from DynamoDB and returns logs to the client (`GET /logs`)
 
 ## Tech Stack
 
 - **C# / .NET 10** -- ASP.NET Core Web API, Entity Framework Core, NSwag (OpenAPI/Swagger)
-- **Python 3.11** -- boto3, pymongo, python-dotenv
-- **Go 1.25** -- Chi router, MongoDB Go driver
+- **Python 3.11** -- boto3, deployed as an AWS Lambda function (SQS-triggered)
+- **Go 1.25** -- Chi router, AWS SDK for Go (DynamoDB)
 - **PostgreSQL 16** -- Tenant and project metadata (relational data)
-- **MongoDB** -- Log event storage (document store)
+- **DynamoDB** -- Log event storage (key-value/document store)
 - **AWS SNS + SQS (FIFO)** -- Async message delivery with ordering guarantees
+- **AWS Lambda** -- Worker runtime, packaged as a container image and triggered by the SQS event source mapping
 - **Apache Kafka** -- Secondary event stream
 - **Docker** -- Containerized services and local infrastructure
 
@@ -115,11 +116,15 @@ dotnet run
 
 **Worker:**
 
+The worker runs as an AWS Lambda function (container image) triggered by the SQS event source mapping -- see `_deploy/lambda`. To run it locally for testing:
+
 ```bash
 cd ashwatch-worker
-cp .env.example .env  # fill in AWS and MongoDB credentials
 pip install -r requirements.txt
-python main.py
+AWS_REGION=us-east-1 DYNAMODB_TABLE=ashwatch python -c "
+from main import lambda_handler
+lambda_handler({'Records': [...]}, None)
+"
 ```
 
 **Query API:**
