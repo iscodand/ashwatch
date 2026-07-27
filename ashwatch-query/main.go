@@ -3,6 +3,7 @@ package main
 import (
 	"ashwatchquery/db"
 	"ashwatchquery/logging"
+	"context"
 	"fmt"
 	"log"
 	"net/http"
@@ -17,12 +18,19 @@ import (
 func main() {
 	_ = godotenv.Load(".env")
 
-	mongoClient, err := db.Connect()
+	ctx := context.Background()
+
+	dynamoClient, err := db.Connect(ctx)
 	if err != nil {
-		log.Fatalf("mongo connect error: %v", err)
+		log.Fatalf("dynamodb connect error: %v", err)
 	}
 
-	logRepo := logging.NewLogRepository(mongoClient)
+	tableName := os.Getenv("DYNAMODB_TABLE")
+	if tableName == "" {
+		tableName = "ashwatch"
+	}
+
+	logRepo := logging.NewLogRepository(dynamoClient, tableName)
 	logHandler := logging.NewLogHandler(logRepo)
 
 	r := chi.NewRouter()
@@ -55,8 +63,6 @@ func main() {
 	if port == "" {
 		port = "8080"
 	}
-
-	fmt.Printf("Server running on port: %s", port)
 
 	fmt.Printf("Server running on port: %s\n", port)
 
