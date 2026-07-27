@@ -82,6 +82,23 @@ resource "aws_dynamodb_table" "ashwatch" {
     type = "S"
   }
 
+  attribute {
+    name = "tenantId"
+    type = "S"
+  }
+
+  attribute {
+    name = "timestamp"
+    type = "S"
+  }
+
+  global_secondary_index {
+    name            = "tenantId-timestamp-index"
+    hash_key        = "tenantId"
+    range_key       = "timestamp"
+    projection_type = "ALL"
+  }
+
   tags = {
     Name = "ashwatch-dynamodb"
   }
