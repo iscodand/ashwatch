@@ -10,7 +10,6 @@
     <PackageReference Include="AWSSDK.SimpleNotificationService" Version="4.0.2.27" />
     <PackageReference Include="AWSSDK.SSO" Version="4.0.2.24" />
     <PackageReference Include="AWSSDK.SSOOIDC" Version="4.0.3.25" />
-    <PackageReference Include="Confluent.Kafka" Version="2.13.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.3">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
