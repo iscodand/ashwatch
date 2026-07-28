@@ -73,6 +73,8 @@ app.UseSwaggerUi(config =>
 
 app.UseCors(policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
+app.MapGet("/health", () => Results.Ok("ok"));
+
 app.MapControllers();
 
 app.Run();
