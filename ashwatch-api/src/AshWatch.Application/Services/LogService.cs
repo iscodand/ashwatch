@@ -2,12 +2,10 @@ using AshWatch.Application.Common;
 using AshWatch.Application.Contracts;
 using AshWatch.Application.Dtos;
 using AshWatch.Domain.Entities;
-using AshWatch.Domain.Repositories;
 
 namespace AshWatch.Application.Services;
 
-public class LogService(ILogRepository logRepository, ILogQueueProducer logQueueProducer, IPublisher publisher)
-    : ILogService
+public class LogService(IPublisher publisher) : ILogService
 {
     private static readonly HashSet<string> AllowedLevels =
     [
@@ -18,8 +16,6 @@ public class LogService(ILogRepository logRepository, ILogQueueProducer logQueue
         "ERROR",
         "FATAL"
     ];
-
-    private readonly ILogRepository _logRepository = logRepository;
 
     public async Task<DefaultResponse<Log>> LogAsync(CreateLogRequest request)
     {
@@ -32,7 +28,6 @@ public class LogService(ILogRepository logRepository, ILogQueueProducer logQueue
         Log log = CreateLogRequest.MapToLog(request);
 
         await publisher.PublishAsync(log);
-        // await logQueueProducer.ProduceAsync(log);
 
         return DefaultResponse<Log>.Ok(log, "Log created successfully.");
     }
@@ -63,7 +58,7 @@ public class LogService(ILogRepository logRepository, ILogQueueProducer logQueue
 
         foreach (var log in logsToPersist)
         {
-            await logQueueProducer.ProduceAsync(log);
+            await publisher.PublishAsync(log);
         }
 
         return DefaultResponse<List<Log>>.Ok(logsToPersist, "Batch logs created successfully.");
