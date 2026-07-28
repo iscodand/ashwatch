@@ -4,7 +4,6 @@ using AshWatch.Application.Services;
 using AshWatch.Domain.Repositories;
 using AshWatch.Infrastructure.AWS;
 using AshWatch.Infrastructure.Data;
-using AshWatch.Infrastructure.Producers;
 using AshWatch.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,12 +27,10 @@ else
 builder.Services.AddScoped<ILogService, LogService>();
 builder.Services.AddScoped<ITenantService, TenantService>();
 builder.Services.AddScoped<IProjectService, ProjectService>();
-builder.Services.AddScoped<ILogRepository, LogRepository>();
 builder.Services.AddScoped<ITenantRepository, TenantRepository>();
 builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
-builder.Services.AddSingleton<ILogQueueProducer, KafkaLogQueueProducer>();
 builder.Services.AddSingleton<IPublisher, Publisher>();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
