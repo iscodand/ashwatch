@@ -6,6 +6,7 @@ using AshWatch.Infrastructure.AWS;
 using AshWatch.Infrastructure.Data;
 using AshWatch.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,8 +34,20 @@ builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepositor
 
 builder.Services.AddSingleton<IPublisher, Publisher>();
 
+var dbHost = builder.Configuration["DB_HOST"];
+var connectionString = string.IsNullOrEmpty(dbHost)
+    ? builder.Configuration.GetConnectionString("PostgresDb")
+    : new NpgsqlConnectionStringBuilder
+    {
+        Host = dbHost,
+        Port = int.Parse(builder.Configuration["DB_PORT"] ?? "5432"),
+        Database = builder.Configuration["DB_NAME"],
+        Username = builder.Configuration["DB_USERNAME"],
+        Password = builder.Configuration["DB_PASSWORD"],
+    }.ConnectionString;
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresDb"))
+    options.UseNpgsql(connectionString)
 );
 
 builder.Services.AddCors();
