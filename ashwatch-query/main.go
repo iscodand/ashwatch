@@ -2,6 +2,7 @@ package main
 
 import (
 	"ashwatchquery/db"
+	"ashwatchquery/docs"
 	"ashwatchquery/logging"
 	"context"
 	"fmt"
@@ -56,6 +57,9 @@ func main() {
 		w.WriteHeader(http.StatusOK)
 		_, _ = w.Write([]byte("ok"))
 	})
+
+	r.Get("/swagger/doc.json", docs.SpecHandler)
+	r.Get("/swagger/*", docs.UIHandler)
 
 	r.Mount("/logs", logging.Routes(logHandler))
 

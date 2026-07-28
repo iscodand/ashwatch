@@ -1,0 +1,111 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "AshWatch Query API",
+    "description": "Read-only API for querying logs stored in DynamoDB.",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "summary": "Health check",
+        "tags": ["health"],
+        "responses": {
+          "200": {
+            "description": "Service is healthy",
+            "content": {
+              "text/plain": {
+                "schema": { "type": "string", "example": "ok" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/logs": {
+      "get": {
+        "summary": "List logs filtered by tenant and date range",
+        "tags": ["logs"],
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "required": false,
+            "description": "RFC3339 timestamp",
+            "schema": { "type": "string", "format": "date-time" }
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "required": false,
+            "description": "RFC3339 timestamp",
+            "schema": { "type": "string", "format": "date-time" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of logs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Log" }
+                }
+              }
+            }
+          },
+          "400": { "description": "Missing or invalid query parameters" },
+          "500": { "description": "Unexpected error" }
+        }
+      }
+    },
+    "/logs/{id}": {
+      "get": {
+        "summary": "Get a log by id",
+        "tags": ["logs"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Log found",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Log" }
+              }
+            }
+          },
+          "404": { "description": "Log not found" },
+          "500": { "description": "Unexpected error" }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Log": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "tenantId": { "type": "string" },
+          "projectId": { "type": "string" },
+          "author": { "type": "string" },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "level": { "type": "string" },
+          "message": { "type": "string" }
+        }
+      }
+    }
+  }
+}
