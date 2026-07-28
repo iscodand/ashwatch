@@ -45,6 +45,15 @@ data "terraform_remote_state" "sns_sqs" {
   }
 }
 
+data "terraform_remote_state" "db" {
+  backend = "s3"
+  config = {
+    bucket = "ashwatch-tf-state-bucket"
+    key    = "db/terraform.tfstate"
+    region = "us-east-1"
+  }
+}
+
 resource "aws_ecs_cluster" "ashwatch-cluster" {
   name = "ashwatch_cluster"
 
@@ -107,6 +116,33 @@ resource "aws_ecs_task_definition" "ashwatch_command_api" {
         {
           name  = "SNS_TOPIC_ARN"
           value = data.terraform_remote_state.sns_sqs.outputs.logging_topic_arn
+        },
+        {
+          name  = "DB_HOST"
+          value = data.terraform_remote_state.db.outputs.db_endpoint
+        },
+        {
+          name  = "DB_PORT",
+          value = tostring(data.terraform_remote_state.db.outputs.db_port)
+        },
+        {
+          name  = "DB_NAME",
+          value = data.terraform_remote_state.db.outputs.db_name
+        },
+        {
+          name  = "DB_PORT",
+          value = tostring(data.terraform_remote_state.db.outputs.db_port)
+        }
+      ]
+
+      secrets = [
+        {
+          name      = "DB_PASSWORD"
+          valueFrom = "${data.terraform_remote_state.db.outputs.db_secret_arn}:password::"
+        },
+        {
+          name      = "DB_USERNAME"
+          valueFrom = "${data.terraform_remote_state.db.outputs.db_secret_arn}:username::"
         }
       ]
 
@@ -230,6 +266,20 @@ data "aws_iam_policy_document" "query_api_permissions" {
       "${data.terraform_remote_state.ecr_dynamodb.outputs.dynamodb_table_arn}/index/*"
     ]
   }
+}
+
+data "aws_iam_policy_document" "execution_secrets_access" {
+  statement {
+    effect    = "Allow"
+    actions   = ["secretsmanager:GetSecretValue"]
+    resources = [data.terraform_remote_state.db.outputs.db_secret_arn]
+  }
+}
+
+resource "aws_iam_role_policy" "execution_secrets" {
+  name   = "ashwatch-execution-secrets-policy"
+  role   = aws_iam_role.ecs_execution.id
+  policy = data.aws_iam_policy_document.execution_secrets_access.json
 }
 
 resource "aws_iam_role_policy" "command_api_policy" {
