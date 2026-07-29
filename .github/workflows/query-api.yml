@@ -60,10 +60,16 @@ jobs:
         run: |
           docker build -t ${{ steps.check-image.outputs.image }} .
 
+      - name: Tag image as latest
+        if: steps.check-image.outputs.exists == 'false'
+        run: |
+          docker tag ${{ steps.check-image.outputs.image }} ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:latest
+
       - name: Push image
         if: steps.check-image.outputs.exists == 'false'
         run: |
           docker push ${{ steps.check-image.outputs.image }}
+          docker push ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:latest
 
       - name: Download current task definition
         run: |
