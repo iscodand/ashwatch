@@ -62,6 +62,8 @@ builder.Services.AddOpenApiDocument(config =>
 
 var app = builder.Build();
 
+app.UsePathBase("/commands");
+
 app.UseOpenApi();
 app.UseSwaggerUi(config =>
 {
