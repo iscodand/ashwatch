@@ -58,10 +58,12 @@ func main() {
 		_, _ = w.Write([]byte("ok"))
 	})
 
-	r.Get("/swagger/doc.json", docs.SpecHandler)
-	r.Get("/swagger/*", docs.UIHandler)
+	r.Route("/query", func(r chi.Router) {
+		r.Get("/swagger/doc.json", docs.SpecHandler)
+		r.Get("/swagger/*", docs.UIHandler)
 
-	r.Mount("/logs", logging.Routes(logHandler))
+		r.Mount("/logs", logging.Routes(logHandler))
+	})
 
 	port := os.Getenv("PORT")
 	if port == "" {
