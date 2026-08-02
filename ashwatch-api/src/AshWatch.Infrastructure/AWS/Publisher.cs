@@ -15,9 +15,7 @@ public class Publisher(IAmazonSimpleNotificationService snsClient, IConfiguratio
         {
             TopicArn = configuration["SNS_TOPIC_ARN"],
             Message = JsonSerializer.Serialize(log),
-            Subject = "AshWatchLogging",
-            MessageGroupId = log.ProjectId.ToString(),
-            MessageDeduplicationId = Guid.NewGuid().ToString()
+            Subject = "AshWatchLogging"
         };
 
         var response = await snsClient.PublishAsync(request, ct);
