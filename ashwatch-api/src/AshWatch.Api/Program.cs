@@ -73,6 +73,12 @@ app.UseSwaggerUi(config =>
     config.DocExpansion = "list";
 });
 
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    db.Database.Migrate();
+}
+
 app.UseCors(policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
 app.MapGet("/health", () => Results.Ok("ok"));
