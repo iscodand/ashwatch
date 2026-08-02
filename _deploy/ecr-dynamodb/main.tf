@@ -20,7 +20,7 @@ provider "aws" {
 
 resource "aws_ecr_repository" "ashwatch-command-api" {
   name                 = "ashwatch-command-api"
-  image_tag_mutability = "MUTABLE_WITH_EXCLUSION"
+  image_tag_mutability = "IMMUTABLE_WITH_EXCLUSION"
 
   image_scanning_configuration {
     scan_on_push = true
@@ -38,7 +38,7 @@ resource "aws_ecr_repository" "ashwatch-command-api" {
 
 resource "aws_ecr_repository" "ashwatch-query-api" {
   name                 = "ashwatch-query-api"
-  image_tag_mutability = "MUTABLE_WITH_EXCLUSION"
+  image_tag_mutability = "IMMUTABLE_WITH_EXCLUSION"
 
   image_scanning_configuration {
     scan_on_push = true
@@ -56,7 +56,7 @@ resource "aws_ecr_repository" "ashwatch-query-api" {
 
 resource "aws_ecr_repository" "ashwatch-worker" {
   name                 = "ashwatch-worker"
-  image_tag_mutability = "MUTABLE_WITH_EXCLUSION"
+  image_tag_mutability = "IMMUTABLE_WITH_EXCLUSION"
 
   image_scanning_configuration {
     scan_on_push = true
