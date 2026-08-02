@@ -54,6 +54,15 @@ data "terraform_remote_state" "db" {
   }
 }
 
+data "terraform_remote_state" "alb" {
+  backend = "s3"
+  config = {
+    bucket = "ashwatch-tf-state-bucket"
+    key    = "alb/terraform.tfstate"
+    region = "us-east-1"
+  }
+}
+
 resource "aws_ecs_cluster" "ashwatch-cluster" {
   name = "ashwatch_cluster"
 
@@ -228,6 +237,12 @@ resource "aws_ecs_service" "command_api" {
     security_groups  = [data.terraform_remote_state.network.outputs.fargate_sg_id]
     assign_public_ip = true
   }
+
+  load_balancer {
+    target_group_arn = data.terraform_remote_state.alb.outputs.command_target_group_arn
+    container_name   = "command-api"
+    container_port   = 8080
+  }
 }
 
 resource "aws_ecs_service" "query_api" {
@@ -245,6 +260,12 @@ resource "aws_ecs_service" "query_api" {
     subnets          = data.terraform_remote_state.network.outputs.public_subnet_ids
     security_groups  = [data.terraform_remote_state.network.outputs.fargate_sg_id]
     assign_public_ip = true
+  }
+
+  load_balancer {
+    target_group_arn = data.terraform_remote_state.alb.outputs.query_target_group_arn
+    container_name   = "query-api"
+    container_port   = 8080
   }
 }
 
