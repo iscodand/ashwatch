@@ -13,7 +13,7 @@ public class Publisher(IAmazonSimpleNotificationService snsClient, IConfiguratio
     {
         PublishRequest request = new()
         {
-            TopicArn = configuration["AWS:SNSTopicArn"],
+            TopicArn = configuration["SNS_TOPIC_ARN"],
             Message = JsonSerializer.Serialize(log),
             Subject = "AshWatchLogging",
             MessageGroupId = log.ProjectId.ToString(),
