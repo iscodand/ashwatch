@@ -1,0 +1,36 @@
+meta {
+  name: Create Log Batch
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/logs/batch
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  [
+    {
+      "tenantId": "{{tenantId}}",
+      "projectId": "{{projectId}}",
+      "author": "teste-deploy",
+      "message": "Primeiro log do lote",
+      "level": "INFO",
+      "timestamp": "2026-07-29T12:00:00Z"
+    },
+    {
+      "tenantId": "{{tenantId}}",
+      "projectId": "{{projectId}}",
+      "author": "teste-deploy",
+      "message": "Segundo log do lote",
+      "level": "WARN",
+      "timestamp": "2026-07-29T12:01:00Z"
+    }
+  ]
+}

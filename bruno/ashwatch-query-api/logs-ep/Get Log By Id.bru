@@ -1,0 +1,15 @@
+meta {
+  name: Get Log By Id
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrlQuery}}/logs/{{logId}}
+  body: none
+  auth: none
+}
+
+vars:pre-request {
+  logId: 3c9e8bfe-50d2-467a-ba8a-ed859a79882d
+}

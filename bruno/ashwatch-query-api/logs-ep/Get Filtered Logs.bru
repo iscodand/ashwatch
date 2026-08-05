@@ -1,0 +1,23 @@
+meta {
+  name: Get Filtered Logs
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrlQuery}}/logs?tenantId={{tenantId}}&startDate={{startDate}}&endDate={{endDate}}
+  body: none
+  auth: none
+}
+
+params:query {
+  tenantId: {{tenantId}}
+  startDate: {{startDate}}
+  endDate: {{endDate}}
+}
+
+vars:pre-request {
+  tenantId: 6587c283-fa86-4e6d-ac9b-6f0587d31030
+  startDate: 2026-07-01T00:00:00Z
+  endDate: 2026-08-30T00:00:00Z
+}

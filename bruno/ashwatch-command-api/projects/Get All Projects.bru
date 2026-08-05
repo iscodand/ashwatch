@@ -1,0 +1,15 @@
+meta {
+  name: Get All Projects
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/projects?tenantId={{tenantId}}
+  body: none
+  auth: none
+}
+
+params:query {
+  tenantId: {{tenantId}}
+}

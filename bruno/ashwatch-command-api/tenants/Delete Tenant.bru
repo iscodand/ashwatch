@@ -1,0 +1,11 @@
+meta {
+  name: Delete Tenant
+  type: http
+  seq: 5
+}
+
+delete {
+  url: {{baseUrl}}/tenants/{{tenantId}}
+  body: none
+  auth: none
+}

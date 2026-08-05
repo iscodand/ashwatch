@@ -1,0 +1,22 @@
+meta {
+  name: Update Tenant
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{baseUrl}}/tenants/{{tenantId}}
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "name": "Empresa Teste Atualizada",
+    "description": "Descricao atualizada via Bruno"
+  }
+}

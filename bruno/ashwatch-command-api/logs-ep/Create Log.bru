@@ -1,0 +1,31 @@
+meta {
+  name: Create Log
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/logs
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "tenantId": "{{tenantId}}",
+    "projectId": "{{projectId}}",
+    "author": "teste-deploy-123",
+    "message": "Teste de deploy apos atualizacao da tag latest",
+    "level": "INFO",
+    "timestamp": "2026-07-29T12:00:00Z"
+  }
+}
+
+vars:pre-request {
+  tenantId: 6587c283-fa86-4e6d-ac9b-6f0587d31030
+  projectId: 37eed51f-323d-4dfe-95a5-a067ef2644f2
+}
